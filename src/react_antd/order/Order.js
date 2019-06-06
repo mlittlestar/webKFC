@@ -1,36 +1,59 @@
 import React from 'react';
 import $ from 'jquery';
-import {Table,Button,Icon,message,Modal} from 'antd';
+import {Table,Button,Modal,message,Icon} from 'antd';
 
-import UserRoleForm from './UserRoleForm';
+import OrderForm from './OrderForm';
 
-class UserRole extends React.Component{
+class Order extends React.Component{
     constructor(){
         super();
         this.state={
-            userroles:[],
-            userrole:{},
+            orders:[],
+            order:{},
             visible:false
         }
     }
 
-
     componentWillMount(){
-        this.loadUserRole();
+        this.loadOrder();
     }
 
-    loadUserRole(){
-        let url="http://127.0.0.1:8787/userrole/findAllWithUserAndRole";
+    loadOrder(){
+        let url="http://127.0.0.1:8787/order/findAllWithUser";
         $.get(url,({status,data})=>{
             if(status===200){
                 this.setState({
-                    userroles:data,
+                    orders:data
                 })
             }else{
                 alert("异常");
             }
 
         });
+    }
+
+    //通过id删除
+    toDelete=(id)=>{
+        Modal.confirm({
+            title: '是否要删除',
+            content: 'Some descriptions',
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            onOk:()=> {
+                //进行删除
+                $.get("http://127.0.0.1:8787/order/deleteOrderById?id="+id,({status,message})=>{
+                    if(status===200){
+                        this.loadOrder();
+                    }else{
+                        alert(message);
+                    }
+                })
+            },
+            onCancel() {
+              console.log('Cancel');
+            },
+          });
     }
 
 
@@ -40,13 +63,13 @@ class UserRole extends React.Component{
           this.form.validateFields((err, values) => {
           if (!err) {
               console.log(values)
-              let url ="http://127.0.0.1:8787/userrole/saveOrupdateUserRole";
+              let url ="http://127.0.0.1:8787/order/saveOrupdateOrder";
               $.post(url,values,({status,message})=>{
               if(status === 200){
                   message.success(message)
                   this.setState({ visible: false, });
                   // 页面刷新
-                  this.loadUserRole();
+                  this.loadOrder();
           } else {
                   message.error(message);
           }
@@ -62,27 +85,36 @@ class UserRole extends React.Component{
       handleCancel = e => {
       this.setState({ visible: false, });
       };
-    
-    
-    
-        // 点击添加按钮的执行函数
-    toAdd(){
-        this.setState({ 
-        visible: true, 
-        userrole:{}
-        });
+
+
+
+
+    toAdd(record){
+        this.setState({
+            visible:true,
+            order:record
+        })
     }
+
+    toEdit(record){
+        this.setState({
+            visible:true,
+            order:record
+        })
+    }
+
+    toDetails(){
+
+    }
+
 
     // ref函数
-    UserRoleFormRefs = (form)=>{
+    OrderFormRefs = (form)=>{
         this.form = form;
-    }
-
-
+      }
 
     render(){
-        let {userroles}=this.state;
-
+        let {orders,order}=this.state;
          // ID前面有框
          const rowSelection = {
             onChange: (selectedRowKeys, selectedRows) => {
@@ -103,16 +135,16 @@ class UserRole extends React.Component{
               render: text => <a href="javascript:;">{text}</a>,
             },
             {
-              title: '角色姓名',
-              dataIndex: 'role.name',
+              title: '订单时间',
+              dataIndex: 'orderTime',
             },
             {
-                title: '用户名称',
+                title: '订单状态',
+                dataIndex: 'status',
+            },
+            {
+                title: '用户',
                 dataIndex: 'user.name',
-            },
-            {
-                title: '用户电话',
-                dataIndex: 'user.telephone',
             },
             {
                 title: '操作',
@@ -121,24 +153,23 @@ class UserRole extends React.Component{
                 render: (val,record) =>{
                     return(
                         <div>
-                            <Icon type="delete"/>&nbsp;
-                            <Icon type="edit"/>&nbsp;
-                            <Icon type="eye"/>
+                            <Icon type="delete" onClick={this.toDelete.bind(this,record.id)}/>&nbsp;
+                            <Icon type="edit" onClick={this.toEdit.bind(this,record)}/>&nbsp;
+                            <Icon type="eye" onClick={this.toDetails.bind(this,record)}/>
                         </div>
                     )
                 }
             }
           ]; 
+
         return(
-            <div className="userrole">
+            <div className="product">
+                {/* 按钮 */}
                 <div className="btn">
-                    <Button type="primary" onClick={this.toAdd.bind(this)}>添加</Button>
-                    <Button type="danger"> 批量删除</Button>
+                    <Button type="primary" onClick={this.toAdd.bind(this)}>添加</Button>&nbsp;
+                    <Button type="danger">批量删除</Button>
                 </div>
-                
-                
-                {/* 表格 */}
-                <Table rowSelection={rowSelection} columns={columns} dataSource={this.state.userroles} bordered="true"/>
+                <Table rowKey="id" rowSelection={rowSelection} columns={columns} dataSource={this.state.orders} bordered="true"/>
 
                 <Modal
                     title="添加课程"
@@ -146,16 +177,11 @@ class UserRole extends React.Component{
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
                     >
-                     <UserRoleForm initData={this.state.userrole} ref={this.UserRoleFormRefs}/>
+                     <OrderForm initData={this.state.order} ref={this.OrderFormRefs}/>
                 </Modal>
-                
-
-
             </div>
         )
     }
 }
 
-
-
-export default UserRole;
+export default Order;

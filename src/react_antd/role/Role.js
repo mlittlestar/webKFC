@@ -25,7 +25,7 @@ class Role extends React.Component{
     }
 
     loadRole(){
-        let url="http://203.195.251.185:8787/role/findAll";
+        let url="http://127.0.0.1:8787/role/findAll";
         $.get(url,({status,data})=>{
             if(status===200){
                 this.setState({
@@ -49,7 +49,7 @@ class Role extends React.Component{
             cancelText: 'No',
             onOk:()=> {
                 //进行删除
-                $.get("http://203.195.251.185:8787/role/deleteRoleById?id="+id,({status,message})=>{
+                $.get("http://127.0.0.1:8787/role/deleteRoleById?id="+id,({status,message})=>{
                     if(status===200){
                         this.loadRole();
                     }else{
@@ -98,7 +98,7 @@ class Role extends React.Component{
            this.form.validateFields((err, values) => {
            if (!err) {
                console.log(values)
-               let url ="http://203.195.251.185:8787/role/saveOrupdateRole";
+               let url ="http://127.0.0.1:8787/role/saveOrupdateRole";
                $.post(url,values,({status,message})=>{
                if(status === 200){
                    message.success(message)

@@ -29,7 +29,7 @@ class Category extends React.Component{
 
 
     loadCategory(){
-        let url="http://203.195.251.185:8787/category/findAll";
+        let url="http://127.0.0.1:8787/category/findAll";
         $.get(url,({status,data})=>{
             if(status===200){
                 this.setState({
@@ -51,7 +51,7 @@ class Category extends React.Component{
             cancelText: 'No',
             onOk:()=> {
                 //进行删除
-                $.get("http://203.195.251.185:8787/category/deleteByCategoryId?id="+id,({status,message})=>{
+                $.get("http://127.0.0.1:8787/category/deleteByCategoryId?id="+id,({status,message})=>{
                     if(status===200){
                         this.loadCategory();
                     }else{
@@ -100,7 +100,7 @@ class Category extends React.Component{
            this.form.validateFields((err, values) => {
            if (!err) {
                console.log(values)
-               let url ="http://203.195.251.185:8787/category/saveOrupdateCategory";
+               let url ="http://127.0.0.1:8787/category/saveOrupdateCategory";
                $.post(url,values,({status,message})=>{
                if(status === 200){
                    message.success(message)

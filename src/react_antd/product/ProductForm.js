@@ -1,7 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
 import {Input,Form,Select} from 'antd';
-import Category from '../category/Category';
 
 function handleChange(value) {
   console.log(`selected ${value}`);
@@ -24,7 +23,7 @@ class ProductForm extends React.Component{
 
 
     loadCategory(){
-        let url = "http://203.195.251.185:8787/category/findAll"
+        let url = "http://127.0.0.1:8787/category/findAll"
         $.get(url,({status,message,data})=>{
           if(status === 200){
             this.setState({

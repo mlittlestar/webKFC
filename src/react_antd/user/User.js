@@ -28,7 +28,7 @@ class User extends React.Component{
     //渲染User界面
     loadUser(){
         //查询所有学生信息，将学生信息保存到state
-        let url="http://203.195.251.185:8787/user/findAll";
+        let url="http://127.0.0.1:8787/user/findAll";
         $.get(url,({status,data})=>{
             if(status==200){
                 this.setState({
@@ -51,7 +51,7 @@ class User extends React.Component{
       cancelText: 'No',
       onOk:()=> {
         // 编写代码进行删除
-        let url = "http://203.195.251.185:8787/user/batchDelete";
+        let url = "http://127.0.0.1:8787/user/batchDelete";
         $.ajax({
           url,
           method:"POST",
@@ -86,7 +86,7 @@ class User extends React.Component{
             cancelText: 'No',
             onOk:()=> {
                 //进行删除
-                $.get("http://203.195.251.185:8787/user/deleteByUserId?id="+id,({status,message})=>{
+                $.get("http://127.0.0.1:8787/user/deleteByUserId?id="+id,({status,message})=>{
                     if(status===200){
                         this.loadUser();
                     }else{
@@ -134,7 +134,7 @@ class User extends React.Component{
            this.form.validateFields((err, values) => {
            if (!err) {
                console.log(values)
-               let url ="http://203.195.251.185:8787/user/saveOrupdateUser";
+               let url ="http://127.0.0.1:8787/user/saveOrupdateUser";
                $.post(url,values,({status,message})=>{
                if(status === 200){
                    message.success(message)

@@ -33,7 +33,7 @@ class Product extends React.Component{
 
 
     loadProduct(){
-        let url="http://203.195.251.185:8787/product/findAllWithCategory";
+        let url="http://127.0.0.1:8787/product/findAllWithCategory";
         $.get(url,({status,data})=>{
             if(status===200){
                 this.setState({
@@ -58,7 +58,7 @@ class Product extends React.Component{
             cancelText: 'No',
             onOk:()=> {
                 //进行删除
-                $.get("http://203.195.251.185:8787/product/deleteProductById?id="+id,({status,message})=>{
+                $.get("http://127.0.0.1:8787/product/deleteProductById?id="+id,({status,message})=>{
                     if(status===200){
                         this.loadProduct();
                     }else{
@@ -80,7 +80,7 @@ class Product extends React.Component{
           this.form.validateFields((err, values) => {
           if (!err) {
               console.log(values)
-              let url ="http://203.195.251.185:8787/product/saveOrupdateProduct";
+              let url ="http://127.0.0.1:8787/product/saveOrupdateProduct";
               $.post(url,values,({status,message})=>{
               if(status === 200){
                   message.success(message)
@@ -202,7 +202,7 @@ class Product extends React.Component{
                 <Table rowKey="id" rowSelection={rowSelection} columns={columns} dataSource={this.state.products} bordered="true"/>
 
                 <Modal
-                    title="添加课程"
+                    title="添加产品"
                     visible={this.state.visible}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
